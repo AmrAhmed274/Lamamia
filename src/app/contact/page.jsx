@@ -2,6 +2,11 @@ import Button from '@/components/button/Button';
 import styles from './Page.module.css';
 import Image from 'next/image';
 
+export const metadata = {
+  title: 'lamamia Contact page',
+  description: 'This is the description',
+}
+
 const Contact = () => {
   return (
     <div className={styles.container}>

@@ -1,20 +1,42 @@
 import Image from 'next/image';
+import { notFound } from 'next/navigation';
 import styles from './page.module.css';
 
-const BlogPost = () => {
+async function getData(id) {
+  const response = await fetch(`http://localhost:3000/api/posts/${id}`, {cache: 'no-store'})
+
+  if(!response.ok) {
+    return notFound()
+  }
+
+  return response.json()
+}
+
+export async function generateMetadata({ params }) {
+
+  const post = await getData(params.id)
+  return {
+    title: post.title,
+    description: post.desc,
+  };
+}
+
+const BlogPost = async ({ params }) => {
+  const data = await getData(params.id);
+
   return (
     <div className={styles.container}>
 
     <div className={styles.top}>
 
       <div className={styles.info}>
-        <h4 className={styles.title}>Lorem ipsum dolor sit amet consectetur adipisicing elit.</h4>
+        <h4 className={styles.title}>{data.title}</h4>
         <p className={styles.desc}>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam, voluptatibus facere, dolor nemo voluptatum eaque repellat quo incidunt optio tempora et, sequi quisquam tempore doloribus rerum temporibus libero possimus laborum.Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veniam, voluptatibus facere, dolor nemo voluptatum eaque repellat quo incidunt optio tempora et, sequi quisquam tempore doloribus rerum temporibus libero possimus laborum.
+          {data.desc}
         </p>
         <div className={styles.author}>
           <Image
-            src='https://images.pexels.com/photos/17688838/pexels-photo-17688838/free-photo-of-wine-wild-flowers.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+            src={data.img}
             alt=""
             width={40}
             height={40}
@@ -26,7 +48,7 @@ const BlogPost = () => {
 
       <div className={styles.imageContainer}>
         <Image
-          src='https://images.pexels.com/photos/17688838/pexels-photo-17688838/free-photo-of-wine-wild-flowers.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+          src={data.img}
           alt=""
           fill={true}
           className={styles.image}
@@ -37,7 +59,7 @@ const BlogPost = () => {
 
     <div className={styles.content}>
       <p className={styles.text}>
-       Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui reprehenderit tempore nihil pariatur? Voluptatum, cum incidunt! Placeat sequi quia ab, hic corporis maiores est quas, necessitatibus, odit omnis harum voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui reprehenderit tempore nihil pariatur? Voluptatum, cum incidunt! Placeat sequi quia ab, hic corporis maiores est quas, necessitatibus,<br /><br /> odit omnis harum voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui reprehenderit tempore nihil pariatur? Voluptatum, cum incidunt! Placeat sequi quia ab, hic corporis maiores est quas, necessitatibus, odit omnis harum voluptas! Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui reprehenderit tempore nihil pariatur? Voluptatum, cum incidunt! Placeat sequi quia ab, hic corporis maiores est quas, necessitatibus, odit omnis harum voluptas!
+       {data.content}
       </p>
     </div>
   

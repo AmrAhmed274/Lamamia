@@ -2,13 +2,27 @@ import Image from 'next/image';
 import Link from 'next/link';
 import styles from './page.module.css';
 
-const Blog = () => {
+async function getData() {
+  const response = await fetch('http://localhost:3000/api/posts', {cache: 'no-store'})
+
+  if(!response.ok) {
+    throw new Error('Failed to fetch data')
+  }
+
+  return response.json()
+}
+
+
+const Blog = async () => {
+  const data = await getData();
+
   return (
     <div className={styles.container}>
-      <Link href='/blog/testId' className={styles.item}>
+      {data.map(item => (
+      <Link href={`/blog/${item._id}`} className={styles.item}>
         <div className={styles.imageContainer}>
           <Image
-            src='https://images.pexels.com/photos/17688838/pexels-photo-17688838/free-photo-of-wine-wild-flowers.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+            src={item.img}
             alt=""
             width={400}
             height={250}
@@ -16,55 +30,12 @@ const Blog = () => {
           />
         </div>
         <div className={styles.content}>
-          <h1 className={styles.title}>Test</h1>
-          <p className={styles.desc}>Desc</p>
+          <h1 className={styles.title}>{item.title}</h1>
+          <p className={styles.desc}>{item.desc}</p>
         </div>
       </Link>
-      <Link href='/blog/testId' className={styles.item}>
-        <div className={styles.imageContainer}>
-          <Image
-            src='https://images.pexels.com/photos/17688838/pexels-photo-17688838/free-photo-of-wine-wild-flowers.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-            alt=""
-            width={400}
-            height={250}
-            className={styles.image}
-          />
-        </div>
-        <div className={styles.content}>
-          <h1 className={styles.title}>Test</h1>
-          <p className={styles.desc}>Desc</p>
-        </div>
-      </Link>
-      <Link href='/blog/testId' className={styles.item}>
-        <div className={styles.imageContainer}>
-          <Image
-            src='https://images.pexels.com/photos/17688838/pexels-photo-17688838/free-photo-of-wine-wild-flowers.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-            alt=""
-            width={400}
-            height={250}
-            className={styles.image}
-          />
-        </div>
-        <div className={styles.content}>
-          <h1 className={styles.title}>Test</h1>
-          <p className={styles.desc}>Desc</p>
-        </div>
-      </Link>
-      <Link href='/blog/testId' className={styles.item}>
-        <div className={styles.imageContainer}>
-          <Image
-            src='https://images.pexels.com/photos/17688838/pexels-photo-17688838/free-photo-of-wine-wild-flowers.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
-            alt=""
-            width={400}
-            height={250}
-            className={styles.image}
-          />
-        </div>
-        <div className={styles.content}>
-          <h1 className={styles.title}>Test</h1>
-          <p className={styles.desc}>Desc</p>
-        </div>
-      </Link> 
+      ))}
+      
   </div>
   );
 }
