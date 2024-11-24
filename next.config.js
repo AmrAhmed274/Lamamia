@@ -5,9 +5,6 @@ const nextConfig = {
             'images.pexels.com'
         ]
     },
-    eslint: {
-        ignoreDuringBuilds: true,
-    },
 }
 
 module.exports = nextConfig
